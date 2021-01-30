@@ -1,13 +1,17 @@
 package beerscli
 
+import (
+	"encoding/json"
+)
+
 type Beer struct {
-	ProductID int
-	Name      string
-	Price     float64
-	Category  string
-	Type      *BeerType
-	Brewer    string
-	Country   string
+	ProductID int       `json:"product_id"`
+	Name      string    `json:"name"`
+	Price     string    `json:"price"`
+	Category  string    `json:"category"`
+	Type      *BeerType `json:"type"`
+	Brewer    string    `json:"brewer"`
+	Country   string    `json:"country"`
 }
 
 type BeerType int
@@ -55,13 +59,23 @@ var toID = map[string]BeerType{
 	"unknown":        Unknown,
 }
 
+func (t *BeerType) UnmarshalJSON(b []byte) error {
+	var j string
+	err := json.Unmarshal(b, &j)
+	if err != nil {
+		return err
+	}
+	*t = toID[j]
+	return nil
+}
+
 // BeerRepo definiton of methods to access a data beer
 type BeerRepo interface {
 	GetBeers() ([]Beer, error)
 }
 
 // NewBeer initialize struct beer
-func NewBeer(productID int, name, category, brewer, country string, beerType *BeerType, price float64) (b Beer) {
+func NewBeer(productID int, name, category, brewer, country, price string, beerType *BeerType) (b Beer) {
 	b = Beer{
 		ProductID: productID,
 		Name:      name,

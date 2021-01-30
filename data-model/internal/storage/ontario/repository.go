@@ -29,13 +29,11 @@ func (b *beerRepo) GetBeers() (beers []beerscli.Beer, err error) {
 	}
 
 	contents, err := ioutil.ReadAll(response.Body)
-
 	err = json.Unmarshal(contents, &beers)
 
 	if err != nil {
 		return nil, err
 	}
-
 	return
 
 }
