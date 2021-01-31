@@ -1,5 +1,5 @@
-package writer
+package filewriter
 
-type FileWriter interface {
-	FileWrite(filename string)
+type Writer interface {
+	WriteToFile(filename string) (error)
 }

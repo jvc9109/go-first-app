@@ -1,9 +1,12 @@
 package characters
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 type Character struct {
-	CharacterID   int       `json:"id"`
+	CharacterID   int         `json:"id"`
 	Name          string      `json:"name"`
 	Status        string      `json:"status"`
 	Species       string      `json:"species"`
@@ -11,6 +14,15 @@ type Character struct {
 	Gender        *GenderType `json:"gender"`
 	Image         string      `json:"image"`
 	Episodes      []string    `json:"episode"`
+}
+
+func (c *Character) toSlice() (s []string) {
+
+	s = []string{
+		fmt.Sprint(c.CharacterID), c.Name, c.Status, c.Species, c.CharacterType, c.Gender.String(), c.Image,
+	}
+
+	return
 }
 
 type CharacterApi struct {
@@ -69,19 +81,20 @@ func (t *GenderType) UnmarshalJSON(b []byte) error {
 
 type CharacterRepo interface {
 	GetCharacters() ([]Character, error)
+	GetAllCharacters() ([]Character, error)
 	GetCharactersFromPage(page string) ([]Character, error)
 }
 
 func NewCharacter(characterID int, name, status, species, characterType, image string, episodes []string, genderType *GenderType) (c Character) {
 	c = Character{
-		CharacterID: characterID,
-		Name: name,
-		Status: status,
-		Species: species,
+		CharacterID:   characterID,
+		Name:          name,
+		Status:        status,
+		Species:       species,
 		CharacterType: characterType,
-		Gender: genderType,
-		Image: image,
-		Episodes: episodes,
+		Gender:        genderType,
+		Image:         image,
+		Episodes:      episodes,
 	}
 	return
 }
