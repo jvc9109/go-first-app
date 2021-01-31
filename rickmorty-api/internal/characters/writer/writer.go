@@ -1,5 +1,5 @@
 package filewriter
 
 type Writer interface {
-	WriteToFile(filename string) (error)
+	WriteToFile(filename string) error
 }

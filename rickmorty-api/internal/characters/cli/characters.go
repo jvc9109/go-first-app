@@ -1,6 +1,8 @@
 package cli
 
 import (
+	"fmt"
+
 	characters "github.com/jvc9109/go-first-app/rickmorty-api/internal/characters"
 	"github.com/spf13/cobra"
 )
@@ -17,7 +19,7 @@ func InitCharactersCmd(repository characters.CharacterRepo) *cobra.Command {
 	characterCmd := &cobra.Command{
 		Use:   "characters",
 		Short: "Retrive characters data",
-		Run: runCharactersFn(repository),
+		Run:   runCharactersFn(repository),
 	}
 
 	characterCmd.Flags().StringP(saveFileFlag, "f", "", "file where the result is stored")
@@ -41,6 +43,7 @@ func runCharactersFn(repository characters.CharacterRepo) CobraFn {
 		} else {
 			chars, _ = repository.GetCharacters()
 		}
-		
+
+		fmt.Println(chars)
 	}
 }

@@ -35,12 +35,12 @@ func (c *characterRepo) GetAllCharacters() (chars []characters.Character, err er
 	if err != nil {
 		return nil, err
 	}
+
 	chars = apiResponse.Results
 	return
 }
 
 func (c *characterRepo) GetCharacters() (chars []characters.Character, err error) {
-	
 	var apiResponse characters.CharacterApi
 
 	response, err := http.Get(fmt.Sprintf("%v%v", c.url, charachtersEndpoint))
@@ -53,6 +53,7 @@ func (c *characterRepo) GetCharacters() (chars []characters.Character, err error
 	if err != nil {
 		return nil, err
 	}
+
 	chars = apiResponse.Results
 
 	return
@@ -60,6 +61,7 @@ func (c *characterRepo) GetCharacters() (chars []characters.Character, err error
 
 func (c *characterRepo) GetCharactersFromPage(page string) (chars []characters.Character, err error) {
 	var apiResponse characters.CharacterApi
+
 	response, err := http.Get(fmt.Sprintf("%v%v?page=%v", c.url, charachtersEndpoint, page))
 	if err != nil {
 		return nil, err
