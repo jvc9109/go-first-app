@@ -23,6 +23,8 @@ func NewApiRepository() characters.CharacterRepo {
 }
 
 func (c *characterRepo) GetAllCharacters() (chars []characters.Character, err error) {
+	var apiResponse characters.CharacterApi
+
 	response, err := http.Get(fmt.Sprintf("%v%v", c.url, charachtersEndpoint))
 	if err != nil {
 		return nil, err
@@ -33,6 +35,7 @@ func (c *characterRepo) GetAllCharacters() (chars []characters.Character, err er
 	if err != nil {
 		return nil, err
 	}
+	chars = apiResponse.Results
 	return
 }
 
@@ -47,25 +50,28 @@ func (c *characterRepo) GetCharacters() (chars []characters.Character, err error
 
 	contents, err := ioutil.ReadAll(response.Body)
 	err = json.Unmarshal(contents, &apiResponse)
-
-	chars = apiResponse.Results
-
 	if err != nil {
 		return nil, err
 	}
+	chars = apiResponse.Results
+
 	return
 }
 
 func (c *characterRepo) GetCharactersFromPage(page string) (chars []characters.Character, err error) {
+	var apiResponse characters.CharacterApi
 	response, err := http.Get(fmt.Sprintf("%v%v?page=%v", c.url, charachtersEndpoint, page))
 	if err != nil {
 		return nil, err
 	}
 
 	contents, err := ioutil.ReadAll(response.Body)
-	err = json.Unmarshal(contents, &chars)
+	err = json.Unmarshal(contents, &apiResponse)
 	if err != nil {
 		return nil, err
 	}
+
+	chars = apiResponse.Results
+
 	return
 }
