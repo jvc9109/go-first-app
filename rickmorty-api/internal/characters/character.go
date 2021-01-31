@@ -3,7 +3,7 @@ package characters
 import "encoding/json"
 
 type Character struct {
-	CharacterID   int16       `json:"id"`
+	CharacterID   int       `json:"id"`
 	Name          string      `json:"name"`
 	Status        string      `json:"status"`
 	Species       string      `json:"species"`
@@ -69,4 +69,19 @@ func (t *GenderType) UnmarshalJSON(b []byte) error {
 
 type CharacterRepo interface {
 	GetCharacters() ([]Character, error)
+	GetCharactersFromPage(page string) ([]Character, error)
+}
+
+func NewCharacter(characterID int, name, status, species, characterType, image string, episodes []string, genderType *GenderType) (c Character) {
+	c = Character{
+		CharacterID: characterID,
+		Name: name,
+		Status: status,
+		Species: species,
+		CharacterType: characterType,
+		Gender: genderType,
+		Image: image,
+		Episodes: episodes,
+	}
+	return
 }
