@@ -16,10 +16,19 @@ type Character struct {
 	Episodes      []string    `json:"episode"`
 }
 
-func (c *Character) toSlice() (s []string) {
+func (c *Character) ToSlice() (s []string) {
 
 	s = []string{
 		fmt.Sprint(c.CharacterID), c.Name, c.Status, c.Species, c.CharacterType, c.Gender.String(), c.Image,
+	}
+
+	return
+}
+
+func (c *Character) GetHeaders() (h []string) {
+
+	h = []string{
+		"id", "name", "status", "speciees", "type", "gender", "image", "episode",
 	}
 
 	return

@@ -1,7 +1,9 @@
 package cli
 
 import (
-	"fmt"
+	"encoding/csv"
+	"log"
+	"os"
 
 	characters "github.com/jvc9109/go-first-app/rickmorty-api/internal/characters"
 	"github.com/spf13/cobra"
@@ -23,8 +25,9 @@ func InitCharactersCmd(repository characters.CharacterRepo) *cobra.Command {
 	}
 
 	characterCmd.Flags().StringP(saveFileFlag, "f", "", "file where the result is stored")
-	characterCmd.Flags().BoolP(getAllFlag, "a", false, "Recover all data through pages")
+	characterCmd.Flags().BoolP(getAllFlag, "a", false, "Required Recover all data through pages")
 	characterCmd.Flags().StringP(pageFlag, "p", "", "Character Data whitin specific page")
+	characterCmd.MarkFlagRequired(saveFileFlag)
 
 	return characterCmd
 }
@@ -33,17 +36,43 @@ func runCharactersFn(repository characters.CharacterRepo) CobraFn {
 	return func(cmd *cobra.Command, args []string) {
 
 		var chars []characters.Character
+		var err error
 		all, _ := cmd.Flags().GetBool(getAllFlag)
 		page, _ := cmd.Flags().GetString(pageFlag)
+		filename, _ := cmd.Flags().GetString(saveFileFlag)
 
 		if all {
-			chars, _ = repository.GetAllCharacters()
+			chars, err = repository.GetAllCharacters()
 		} else if page != "" {
-			chars, _ = repository.GetCharactersFromPage(page)
+			chars, err = repository.GetCharactersFromPage(page)
 		} else {
-			chars, _ = repository.GetCharacters()
+			chars, err = repository.GetCharacters()
 		}
 
-		fmt.Println(chars)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+
+
+		file, err := os.Create(filename)
+
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+
+		writer := csv.NewWriter(file)
+		headers := chars[0].GetHeaders()
+
+		writer.Write(headers)
+
+		for _, chr := range chars {
+			values := chr.ToSlice()
+			writer.Write(values)
+
+		}
+
+		writer.Flush()
+		file.Close()
+
 	}
 }

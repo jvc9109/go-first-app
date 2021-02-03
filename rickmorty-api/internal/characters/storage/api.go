@@ -24,6 +24,7 @@ func NewApiRepository() characters.CharacterRepo {
 
 func (c *characterRepo) GetAllCharacters() (chars []characters.Character, err error) {
 	var apiResponse characters.CharacterApi
+	var tempResult characters.CharacterApi
 
 	response, err := http.Get(fmt.Sprintf("%v%v", c.url, charachtersEndpoint))
 	if err != nil {
@@ -31,12 +32,33 @@ func (c *characterRepo) GetAllCharacters() (chars []characters.Character, err er
 	}
 
 	contents, err := ioutil.ReadAll(response.Body)
-	err = json.Unmarshal(contents, &chars)
+	err = json.Unmarshal(contents, &apiResponse)
+	
 	if err != nil {
 		return nil, err
 	}
 
 	chars = apiResponse.Results
+	numberPages := apiResponse.Info.Pages
+
+	
+	for i := 1; i < numberPages; i++ {
+		nextPage := i + 1
+		response, err := http.Get(fmt.Sprintf("%v%v?page=%v", c.url, charachtersEndpoint, nextPage))
+		if err != nil {
+			return nil, err
+		}
+	
+		contents, err := ioutil.ReadAll(response.Body)
+		err = json.Unmarshal(contents, &tempResult)
+		if err != nil {
+			return nil, err
+		}
+		
+		chars = append(chars, tempResult.Results...)
+
+	}
+
 	return
 }
 
@@ -50,6 +72,7 @@ func (c *characterRepo) GetCharacters() (chars []characters.Character, err error
 
 	contents, err := ioutil.ReadAll(response.Body)
 	err = json.Unmarshal(contents, &apiResponse)
+
 	if err != nil {
 		return nil, err
 	}
