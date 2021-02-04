@@ -6,6 +6,7 @@ import (
 	"os"
 
 	characters "github.com/jvc9109/go-first-app/internal/characters"
+	"github.com/jvc9109/go-first-app/internal/characters/fetching"
 	"github.com/spf13/cobra"
 )
 
@@ -17,11 +18,11 @@ const (
 	pageFlag     = "page"
 )
 
-func InitCharactersCmd(repository characters.CharacterRepo) *cobra.Command {
+func InitCharactersCmd(service fetching.Service) *cobra.Command {
 	characterCmd := &cobra.Command{
 		Use:   "characters",
 		Short: "Retrive characters data",
-		Run:   runCharactersFn(repository),
+		Run:   runCharactersFn(service),
 	}
 
 	characterCmd.Flags().StringP(saveFileFlag, "f", "", "file where the result is stored")
@@ -32,7 +33,7 @@ func InitCharactersCmd(repository characters.CharacterRepo) *cobra.Command {
 	return characterCmd
 }
 
-func runCharactersFn(repository characters.CharacterRepo) CobraFn {
+func runCharactersFn(service fetching.Service) CobraFn {
 	return func(cmd *cobra.Command, args []string) {
 
 		var chars []characters.Character
@@ -42,11 +43,11 @@ func runCharactersFn(repository characters.CharacterRepo) CobraFn {
 		filename, _ := cmd.Flags().GetString(saveFileFlag)
 
 		if all {
-			chars, err = repository.GetAllCharacters()
+			chars, err = service.FetchAllCharacters()
 		} else if page != "" {
-			chars, err = repository.GetCharactersFromPage(page)
+			chars, err = service.FetchFromPageCharacters(page)
 		} else {
-			chars, err = repository.GetCharacters()
+			chars, err = service.FetchCharacters()
 		}
 
 		if err != nil {
