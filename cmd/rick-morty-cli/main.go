@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/jvc9109/go-first-app/internal/characters/cli"
-	ramapi "github.com/jvc9109/go-first-app/internal/characters/storage"
+	"github.com/jvc9109/go-first-app/internal/characters/storage/ramapi"
 	"github.com/spf13/cobra"
 )
 

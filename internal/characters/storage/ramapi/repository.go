@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/jvc9109/go-first-app/internal/characters"
+	"github.com/jvc9109/go-first-app/internal/characters/errors"
 )
 
 const (
@@ -28,14 +29,17 @@ func (c *characterRepo) GetAllCharacters() (chars []characters.Character, err er
 
 	response, err := http.Get(fmt.Sprintf("%v%v", c.url, charachtersEndpoint))
 	if err != nil {
-		return nil, err
+		return nil, errors.WrapDataUnreacheable(err, "error getting response from %s", charachtersEndpoint)
 	}
 
 	contents, err := ioutil.ReadAll(response.Body)
-	err = json.Unmarshal(contents, &apiResponse)
-
 	if err != nil {
-		return nil, err
+		return nil, errors.WrapDataUnreacheable(err, "error reading response from %s", charachtersEndpoint)
+	}
+
+	err = json.Unmarshal(contents, &apiResponse)
+	if err != nil {
+		return nil, errors.WrapDataUnreacheable(err, "cant parse response into characters")
 	}
 
 	chars = apiResponse.Results
@@ -45,13 +49,17 @@ func (c *characterRepo) GetAllCharacters() (chars []characters.Character, err er
 		nextPage := i + 1
 		response, err := http.Get(fmt.Sprintf("%v%v?page=%v", c.url, charachtersEndpoint, nextPage))
 		if err != nil {
-			return nil, err
+			return nil, errors.WrapDataUnreacheable(err, "error getting response from %s", charachtersEndpoint)
 		}
 
 		contents, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			return nil, errors.WrapDataUnreacheable(err, "error reading response from %s", charachtersEndpoint)
+		}
+
 		err = json.Unmarshal(contents, &tempResult)
 		if err != nil {
-			return nil, err
+			return nil, errors.WrapDataUnreacheable(err, "cant parse response into characters")
 		}
 
 		chars = append(chars, tempResult.Results...)
@@ -66,14 +74,17 @@ func (c *characterRepo) GetCharacters() (chars []characters.Character, err error
 
 	response, err := http.Get(fmt.Sprintf("%v%v", c.url, charachtersEndpoint))
 	if err != nil {
-		return nil, err
+		return nil, errors.WrapDataUnreacheable(err, "error getting response from %s", charachtersEndpoint)
 	}
 
 	contents, err := ioutil.ReadAll(response.Body)
-	err = json.Unmarshal(contents, &apiResponse)
-
 	if err != nil {
-		return nil, err
+		return nil, errors.WrapDataUnreacheable(err, "error reading response from %s", charachtersEndpoint)
+	}
+
+	err = json.Unmarshal(contents, &apiResponse)
+	if err != nil {
+		return nil, errors.WrapDataUnreacheable(err, "cant parse response into characters")
 	}
 
 	chars = apiResponse.Results
@@ -86,13 +97,17 @@ func (c *characterRepo) GetCharactersFromPage(page string) (chars []characters.C
 
 	response, err := http.Get(fmt.Sprintf("%v%v?page=%v", c.url, charachtersEndpoint, page))
 	if err != nil {
-		return nil, err
+		return nil, errors.WrapDataUnreacheable(err, "error getting response from %s", charachtersEndpoint)
 	}
 
 	contents, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return nil, errors.WrapDataUnreacheable(err, "error reading response from %s", charachtersEndpoint)
+	}
+
 	err = json.Unmarshal(contents, &apiResponse)
 	if err != nil {
-		return nil, err
+		return nil, errors.WrapDataUnreacheable(err, "cant parse response into characters")
 	}
 
 	chars = apiResponse.Results
