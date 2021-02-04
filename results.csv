@@ -1,0 +1,21 @@
+id,name,status,speciees,type,gender,image,episode
+1,Rick Sanchez,Alive,Human,,Male,https://rickandmortyapi.com/api/character/avatar/1.jpeg
+2,Morty Smith,Alive,Human,,Male,https://rickandmortyapi.com/api/character/avatar/2.jpeg
+3,Summer Smith,Alive,Human,,Female,https://rickandmortyapi.com/api/character/avatar/3.jpeg
+4,Beth Smith,Alive,Human,,Female,https://rickandmortyapi.com/api/character/avatar/4.jpeg
+5,Jerry Smith,Alive,Human,,Male,https://rickandmortyapi.com/api/character/avatar/5.jpeg
+6,Abadango Cluster Princess,Alive,Alien,,Female,https://rickandmortyapi.com/api/character/avatar/6.jpeg
+7,Abradolf Lincler,unknown,Human,Genetic experiment,Male,https://rickandmortyapi.com/api/character/avatar/7.jpeg
+8,Adjudicator Rick,Dead,Human,,Male,https://rickandmortyapi.com/api/character/avatar/8.jpeg
+9,Agency Director,Dead,Human,,Male,https://rickandmortyapi.com/api/character/avatar/9.jpeg
+10,Alan Rails,Dead,Human,Superhuman (Ghost trains summoner),Male,https://rickandmortyapi.com/api/character/avatar/10.jpeg
+11,Albert Einstein,Dead,Human,,Male,https://rickandmortyapi.com/api/character/avatar/11.jpeg
+12,Alexander,Dead,Human,,Male,https://rickandmortyapi.com/api/character/avatar/12.jpeg
+13,Alien Googah,unknown,Alien,,unknown,https://rickandmortyapi.com/api/character/avatar/13.jpeg
+14,Alien Morty,unknown,Alien,,Male,https://rickandmortyapi.com/api/character/avatar/14.jpeg
+15,Alien Rick,unknown,Alien,,Male,https://rickandmortyapi.com/api/character/avatar/15.jpeg
+16,Amish Cyborg,Dead,Alien,Parasite,Male,https://rickandmortyapi.com/api/character/avatar/16.jpeg
+17,Annie,Alive,Human,,Female,https://rickandmortyapi.com/api/character/avatar/17.jpeg
+18,Antenna Morty,Alive,Human,Human with antennae,Male,https://rickandmortyapi.com/api/character/avatar/18.jpeg
+19,Antenna Rick,unknown,Human,Human with antennae,Male,https://rickandmortyapi.com/api/character/avatar/19.jpeg
+20,Ants in my Eyes Johnson,unknown,Human,Human with ants in his eyes,Male,https://rickandmortyapi.com/api/character/avatar/20.jpeg

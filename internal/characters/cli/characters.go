@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	characters "github.com/jvc9109/go-first-app/rickmorty-api/internal/characters"
+	characters "github.com/jvc9109/go-first-app/internal/characters"
 	"github.com/spf13/cobra"
 )
 
@@ -52,7 +52,6 @@ func runCharactersFn(repository characters.CharacterRepo) CobraFn {
 		if err != nil {
 			log.Fatal(err.Error())
 		}
-
 
 		file, err := os.Create(filename)
 

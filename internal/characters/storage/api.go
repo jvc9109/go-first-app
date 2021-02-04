@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/jvc9109/go-first-app/rickmorty-api/internal/characters"
+	"github.com/jvc9109/go-first-app/internal/characters"
 )
 
 const (
@@ -33,7 +33,7 @@ func (c *characterRepo) GetAllCharacters() (chars []characters.Character, err er
 
 	contents, err := ioutil.ReadAll(response.Body)
 	err = json.Unmarshal(contents, &apiResponse)
-	
+
 	if err != nil {
 		return nil, err
 	}
@@ -41,20 +41,19 @@ func (c *characterRepo) GetAllCharacters() (chars []characters.Character, err er
 	chars = apiResponse.Results
 	numberPages := apiResponse.Info.Pages
 
-	
 	for i := 1; i < numberPages; i++ {
 		nextPage := i + 1
 		response, err := http.Get(fmt.Sprintf("%v%v?page=%v", c.url, charachtersEndpoint, nextPage))
 		if err != nil {
 			return nil, err
 		}
-	
+
 		contents, err := ioutil.ReadAll(response.Body)
 		err = json.Unmarshal(contents, &tempResult)
 		if err != nil {
 			return nil, err
 		}
-		
+
 		chars = append(chars, tempResult.Results...)
 
 	}
