@@ -1,26 +1,40 @@
-package fetching
+package fetching_test 
 
 import (
+	"errors"
 	"testing"
-
+	. "github.com/jvc9109/go-first-app/internal/characters/fetching"
 	"github.com/jvc9109/go-first-app/internal/characters/storage/inmem"
 )
 
 func TestFetchByID(t *testing.T) {
-	repo := inmem.NewRepository()
+	tests := map[string]struct {
+		input int
+		want  int
+		err   error
+	}{
+		"valid character":     {input: 5, want: 5, err: nil},
+		"not found character": {input: 1000000, err: errors.New("error")},
+	}
 
+	repo := inmem.NewRepository()
 	service := NewService(repo)
 
-	expected := 5
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			chr, err := service.FetchByID(tc.input)
+			if err != nil && tc.err == nil {
+				t.Fatalf("not expected erros. Got %v", err)
+			}
 
-	c, err := service.FetchByID(expected)
+			if err == nil && tc.err != nil {
+				t.Error("expected error and got nil")
+			}
 
-	if err != nil {
-		t.Fatalf("expected %d, fot an error %v", expected, err)
+			if chr.CharacterID != tc.want {
+				t.Fatalf("expected %d, got: %d", tc.want, chr.CharacterID)
+			}
+
+		})
 	}
-
-	if c.CharacterID != expected {
-		t.Fatalf("expected %d, got: %d ", expected, c.CharacterID)
-	}
-
 }
