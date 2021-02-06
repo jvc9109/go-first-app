@@ -1,10 +1,10 @@
-package fetching_test 
+package fetching_test
 
 import (
 	"errors"
-	"testing"
 	. "github.com/jvc9109/go-first-app/internal/characters/fetching"
 	"github.com/jvc9109/go-first-app/internal/characters/storage/inmem"
+	"testing"
 )
 
 func TestFetchByID(t *testing.T) {

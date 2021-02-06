@@ -25,7 +25,6 @@ func NewApiRepository() characters.CharacterRepo {
 
 func (c *characterRepo) GetAllCharacters() (chars []characters.Character, err error) {
 	var apiResponse characters.CharacterApi
-	var tempResult characters.CharacterApi
 
 	response, err := http.Get(fmt.Sprintf("%v%v", c.url, charachtersEndpoint))
 	if err != nil {
@@ -45,25 +44,36 @@ func (c *characterRepo) GetAllCharacters() (chars []characters.Character, err er
 	chars = apiResponse.Results
 	numberPages := apiResponse.Info.Pages
 
-	for i := 1; i < numberPages; i++ {
-		nextPage := i + 1
-		response, err := http.Get(fmt.Sprintf("%v%v?page=%v", c.url, charachtersEndpoint, nextPage))
-		if err != nil {
-			return nil, errors.WrapDataUnreacheable(err, "error getting response from %s", charachtersEndpoint)
+	chr := make(chan []characters.Character)
+
+	for i := 2; i <= numberPages; i++ {
+
+		nextPage := i
+		
+
+		go func(chr chan []characters.Character, nextPage int) {
+			var tempResult characters.CharacterApi
+			response, _ := http.Get(fmt.Sprintf("%v%v?page=%v", c.url, charachtersEndpoint, nextPage))
+			contents, _ := ioutil.ReadAll(response.Body)
+			_ = json.Unmarshal(contents, &tempResult)
+			chr <- tempResult.Results
+		}(chr, nextPage)
+		// if err != nil {
+		// 	return nil, errors.WrapDataUnreacheable(err, "error reading response from %s", charachtersEndpoint)
+		// }
+		// if err != nil {
+		// 	return nil, errors.WrapDataUnreacheable(err, "cant parse response into characters")
+		// }
+		// chars = append(chars, tempResult.Results...)
+	}
+
+	i := 2
+	for i < numberPages {
+		select {
+		case chchrs := <-chr:
+			chars = append(chars, chchrs...)
+			i++
 		}
-
-		contents, err := ioutil.ReadAll(response.Body)
-		if err != nil {
-			return nil, errors.WrapDataUnreacheable(err, "error reading response from %s", charachtersEndpoint)
-		}
-
-		err = json.Unmarshal(contents, &tempResult)
-		if err != nil {
-			return nil, errors.WrapDataUnreacheable(err, "cant parse response into characters")
-		}
-
-		chars = append(chars, tempResult.Results...)
-
 	}
 
 	return
